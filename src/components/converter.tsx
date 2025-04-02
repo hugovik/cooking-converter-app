@@ -308,44 +308,6 @@ const MultiIngredientConverter: React.FC = () => {
     setResult(null);
   }, [product, availableUnits, yeastTypes]);
 
-  // FIX: Properly parse fractions and mixed numbers
-  const parseFraction = (input: string): number | null => {
-    if (!input || input.trim() === '') return null;
-    
-    // Clean input
-    const cleanInput = input.trim();
-    
-    // Check if it's a simple number
-    if (!isNaN(Number(cleanInput))) {
-      return Number(cleanInput);
-    }
-    
-    // Handle mixed numbers like "1 1/2"
-    if (cleanInput.includes(' ')) {
-      const parts = cleanInput.split(' ');
-      if (parts.length === 2) {
-        const whole = Number(parts[0]);
-        // Handle fraction part
-        if (parts[1].includes('/')) {
-          const [num, denom] = parts[1].split('/').map(Number);
-          if (!isNaN(whole) && !isNaN(num) && !isNaN(denom) && denom !== 0) {
-            return whole + (num / denom);
-          }
-        }
-      }
-    }
-    
-    // Handle simple fractions like "1/3"
-    if (cleanInput.includes('/')) {
-      const [num, denom] = cleanInput.split('/').map(Number);
-      if (!isNaN(num) && !isNaN(denom) && denom !== 0) {
-        return num / denom;
-      }
-    }
-    
-    return null;
-  };
-
 // Replace the existing convertMeasurement function with this improved version
 const convertMeasurement = useCallback(() => {
   // First, properly parse the input value using our improved parseFraction
