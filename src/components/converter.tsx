@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import SocialLinks from '@/components/SocialLinks'
 
 interface ConversionData {
   [key: string]: {
@@ -219,7 +220,16 @@ const parseFraction = (input: string | number): number | null => {
 };
 
 // Utility function to format number as a nice fraction where appropriate
-const formatResult = (value: number): string => {
+const formatResult = (value: number, toUnit: string): string => {
+  // Units that should always show decimal values rather than fractions
+  const decimalUnits = ['grams', 'oz', 'lbs', 'kg', 'ml'];
+  
+  // For weight-based measurements, use decimal representation
+  if (decimalUnits.includes(toUnit)) {
+    return value.toFixed(1); // Show one decimal place for precision
+  }
+  
+  // For volume measurements, continue using fractions where appropriate
   const wholeNumber = Math.floor(value);
   const decimal = value - wholeNumber;
   
@@ -240,6 +250,7 @@ const formatResult = (value: number): string => {
   // Default to decimal representation
   return value.toFixed(2);
 };
+
 
 const MultiIngredientConverter: React.FC = () => {
   // List of products with conversion data
@@ -372,14 +383,15 @@ const convertMeasurement = useCallback(() => {
   return null;
 }, [inputValue, fromUnit, toUnit, product, fromType, toType]);
 
-  const handleConvert = (): void => {
-    const convertedValue = convertMeasurement();
-    if (convertedValue === null) {
-      setResult('Invalid conversion');
-    } else {
-      setResult(formatResult(convertedValue));
-    }
-  };
+  // Update the handleConvert function to pass the toUnit to formatResult
+const handleConvert = (): void => {
+  const convertedValue = convertMeasurement();
+  if (convertedValue === null) {
+    setResult('Invalid conversion');
+  } else {
+    setResult(formatResult(convertedValue, toUnit));
+  }
+};
 
   // Handle product change
   const handleProductChange = (newProduct: string): void => {
@@ -507,6 +519,7 @@ const convertMeasurement = useCallback(() => {
             </div>
           )}
         </div>
+        <SocialLinks />
       </CardContent>
     </Card>
   );
