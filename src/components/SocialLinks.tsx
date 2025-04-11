@@ -78,7 +78,7 @@ const SocialLinks = () => {
           </Tooltip>
         ))}
       </Box>
-      <Typography
+      {/* <Typography
         variant="body2"
         sx={{
           marginTop: 4,
@@ -97,7 +97,7 @@ const SocialLinks = () => {
         }}
       >
        Vitaliy Pavlyuk
-      </Typography>
+      </Typography> */}
     </Box>
   );
 };
